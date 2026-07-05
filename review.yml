@@ -1,0 +1,96 @@
+aid: omnitracs
+name: Omnitracs
+review:
+  question: Does Omnitracs expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-04'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Omnitracs does expose an event-oriented
+    integration surface - the Services Portal Event Subscription Service (ESS) -
+    but it is not a WebSocket/streaming transport. ESS is a publish-subscribe
+    system implemented over HTTPS with SOAP/XML: Omnitracs applications publish
+    transactions to the Integration Web Server, and back-office applications
+    periodically request (poll) the transaction types they subscribe to and
+    return a SOAP/XML acknowledgement. That is client-initiated request/response
+    polling, not a server-push ws:// or wss:// endpoint, so there was no
+    WebSocket surface to model. The full surface is also partner/customer
+    account gated, which further limits what can be authored from public
+    materials.
+findings:
+  summary: |
+    Omnitracs does not publish a documented public WebSocket API. Omnitracs is a
+    commercial fleet-management, telematics, ELD/Hours-of-Service, routing, and
+    video-safety provider, acquired by Solera Inc. in 2021 and now operating
+    under Solera Fleet Solutions. It exposes real integration APIs and web
+    services - the Omnitracs Roadnet routing/dispatch Web Services (a Swagger UI
+    is published at apex-prod-integration.aws.roadnet.com), the Services Portal
+    Entity Management web services (vehicle/driver/trailer maintenance), and the
+    SOAP/XML Event Subscription Service (positions, messages, HOS, critical
+    events) - but there is no open, self-service public developer portal.
+    Credentials (a username/password with API access) and the integration
+    developer wiki are provisioned to contracted customers and integration
+    partners. The transports observed are request/response REST/HTTP (Roadnet
+    Web Services, Entity Management) and SOAP/XML publish-subscribe polling
+    (ESS). No realtime, bidirectional, or streaming WebSocket endpoint is
+    documented on any Omnitracs surface as of the review date.
+  ownership: |
+    Omnitracs is owned by Solera Inc.; Solera acquired Omnitracs in 2021 and
+    markets it within Solera Fleet Solutions. The Roadnet routing platform and
+    the Omnitracs One platform are the primary integration-bearing products.
+  accessModel: |
+    Partner- and customer-account gated. Real web services exist but public
+    documentation is limited; obtaining a working integration requires an
+    account with API/web-service access and, for full reference material, the
+    Omnitracs integration developer wiki provided through account service.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+      documented: partial
+      note: Omnitracs Roadnet Web Services. A Swagger UI is published, but operations require a provisioned integration account.
+    - protocol: SOAP
+      scheme: https
+      documented: partial
+      note: Services Portal Entity Management web services and the Event Subscription Service exchange SOAP/XML. Partner/customer gated.
+    - protocol: Publish-Subscribe (polling)
+      scheme: https
+      documented: partial
+      note: Event Subscription Service - applications publish transactions to the Integration Web Server; subscribers periodically request them and acknowledge via SOAP/XML. Client-initiated polling, not server push.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented on any public Omnitracs or Roadnet surface as of the review date.
+  endpointsModeled: true
+  endpointsModeledNote: |
+    Because the surfaces are gated, no confirmed endpoint list could be captured
+    from an open reference. The APIs entered in apis.yml are honestly modeled
+    from public integration release notes and the Services Portal integration
+    document; they carry endpointsModeled: true rather than a fabricated
+    concrete path list.
+sources:
+  - url: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+    type: APIReference
+    note: Omnitracs Web Services (Roadnet platform) Swagger UI. Gated operations.
+  - url: https://www.cnrportal.com/help/otsWeb/help/en_US/documents/doc_cust_integrate-with-sp_d.pdf
+    type: Documentation
+    note: Integrating with the Services Portal - Entity Management web services and the Event Subscription Service (SOAP/XML publish-subscribe).
+  - url: https://customer.omnitracs.com/public/release_notes/apps/sp/version/sp-3-4.htm
+    type: Documentation
+    note: Services Portal 3.4 release notes - vehicle/driver maintenance web services, HOS Groups, Omnitracs One Entity Management extensions.
+  - url: https://www.solera.com/solutions/fleet-solutions/omnitracs/
+    type: Documentation
+    note: Solera ownership of Omnitracs (Solera Fleet Solutions).
+  - url: https://www.omnitracs.com/omnitracs-roadnet-platform
+    type: Documentation
+    note: Omnitracs Roadnet routing and dispatch platform overview.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket surface exists to model. Omnitracs' event-oriented surface (the
+    Event Subscription Service) is SOAP/XML publish-subscribe consumed by
+    polling, not a server-push WebSocket, and the full API surface is
+    partner/customer gated. The entry is recorded as an honest gated stub with
+    modeled endpoints rather than a fabricated concrete API surface.

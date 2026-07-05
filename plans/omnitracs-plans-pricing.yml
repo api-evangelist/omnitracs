@@ -1,0 +1,46 @@
+aid: omnitracs
+name: Omnitracs Plans & Pricing
+accessModel: contact-sales
+currency: USD
+notes: |
+  Omnitracs (a Solera Fleet Solutions brand) does not publish a public,
+  self-service price list. Pricing scales by fleet size, selected
+  services/modules, hardware choice, and contract volume, and requires a custom
+  quote. The figures below are drawn from third-party 2025-2026 pricing reviews,
+  not from an official Omnitracs rate card, and are indicative only. API /
+  web-service access is bundled with the underlying subscription and provisioned
+  as part of account service (a username/password with API access), rather than
+  sold as a standalone metered API product.
+plans:
+- name: BYOD ELD (Bring Your Own Device)
+  price: 22.95
+  interval: month
+  unit: per vehicle
+  source: third-party-review
+  note: Indicative entry price cited by third-party reviews for a bring-your-own-device ELD subscription.
+- name: Standard ELD / Fleet Management
+  price: 35.00
+  interval: month
+  unit: per vehicle
+  minimumVehicles: 5
+  source: third-party-review
+  note: Indicative plan pricing cited by third-party reviews; typically requires a minimum fleet size.
+- name: Enterprise / Omnitracs One
+  price: null
+  interval: null
+  unit: custom
+  source: vendor
+  note: Custom-quoted enterprise pricing across compliance, telematics, routing (Roadnet), and video-safety modules. Contact sales.
+hardware:
+- name: Intelligent Vehicle Gateway (IVG) / standalone ELD
+  price: 799.00
+  unit: per unit
+  source: third-party-review
+  note: Indicative one-time hardware cost cited by third-party reviews.
+contact:
+  salesURL: https://www.omnitracs.com/
+  parentURL: https://www.solera.com/solutions/fleet-solutions/omnitracs/
+sources:
+- https://eldfocus.com/omnitracs/
+- https://fleetlogging.com/omnitracs/
+- https://tech.co/fleet-management/omnitracs-eld-compliant-fleet-management-review
