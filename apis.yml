@@ -99,6 +99,8 @@ apis:
     polling over HTTPS, not a WebSocket. Partner/customer gated; endpoints are
     modeled.
 common:
+- type: DomainSecurity
+  url: security/omnitracs-domain-security.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/omnitracs
 - type: Website
