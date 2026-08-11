@@ -1,0 +1,494 @@
+openapi: 3.2.0
+info:
+  title: Omnitracs REST Web Services Routing Job API
+  description: "*NOTE: Versioning of these APIs is done through URL path versioning. Only the Major version should be included in the URL path:\n/integration/v1/login\nIf a change is necessary that would break backwards compatibility for an integration, a new version of that API will be published under a new version.*\n***\n# Integration Guidelines\n## Authentication\nAuthentication follows the Bearer Paradigm: caller posts username and password to /login in a valid Authorization header and receives a token.  That token must be included in the header of all other APIs.  The token is valid across all APIs the user has permissions to, including legacy APIs.  Occasionally, tokens may expire, so your code should be hardened to handle such cases.\nCalling /login before every API call to obtain a new token is not necessary and may result in unexpected errors if too many requests are made.\n\nExample /login Request:\n```\nPOST https://<EnvironmentHostName>/integration/v1/login HTTP/1.1\nContent-Type: application/json\nAccept: application/json, text/plain; q=0.9, text/html;q=0.8\nHost: <EnvironmentHostName>\nAccept-Encoding: gzip, deflate, br\nConnection: keep-alive\nContent-Length: 72\n\n{\n  \"username\": \"someuser@test.com\",\n  \"password\": \"a-password-value\"\n}\n```\nA successful call to the /login endpoint will result in a 200/OK response with following JSON body:\n\n```\n{\n    \"token\": \"3de2dfb6-7fa5-40b0-9a4d-4fc951102c01\",\n    \"customerIdentifier\": \"CUSTOMER01\"\n}\n```\n\nIf invalid credentials are used when making the \"/login\" endpoint request, a 401/unauthorized response will be returned with the following JSON body that contains an \"errorCode\" value of 2.\n\n```\n{\n  \"message\": \"Authentication error.\",\n  \"errorCode\": 2\n}\n```\nOccasionally, tokens may expire, and must be accounted for in any integration code.  If a token has expired then when the \"/login\" endpoint is called a 401/unauthorized response will be returned with the following JSON body that contains an \"errorCode\" value of 4.\n\n```\n{\n  \"message\": \"Authentication Failed.\",\n  \"errorCode\": 4\n}\n```\n\nIf for some reason the token has been \"compromised\" from a security perspective or needs to be revoked for any reason, a call to the /logout method can be issued.  Once succcessfully called, token can no longer be used for any other method calls.\n\nThe following is an example valid request header for a GET request:\n\n```\nGET https://<EnvironmentHostName>/integration/v1/admin/locations?identifiers=ACMEWIDGET  HTTP/1.1\nAccept: application/json\nAuthorization: Bearer c8d58817-f2b4-40a7-851d-65b40a5e1cdc\nContent-Type: application/json\nHost: <EnvironmentHostName>\n```\n\n## Search parameters in GET requests\nIn general, certain fields are available for filtering when passed as query parameters on GET requests.  These filters are optional unless otherwise specified.  If multiple search parameters are provided, the system will find entities that satisfy all the parameters.\n\n\n## EXPAND parameters in GET Requests\nIn general, certain elements are not returned by default in a GET request but are available for retrieval by specifying them in the EXPAND query parameter.  EXPAND accepts a comma delimited list of fields.\n\n\n## Result Paging and Sorting in GET Requests\nGET requests generally support the concept of paging.  The \"page\" and \"pagesize\" query parameters allow the caller to page through large result sets.\nThe \"pageSize\" is generally limited to 1000 items, however some specific endpoints will have smaller or larger \"pageSize\" limits.  Check the specific endpoints\nfor details.  It is also important to note that in some cases it may be necessary to reduce the \"pageSize\" if \"504 - Gateway Timeout\" errors are occuring.\n\nResults are always sorted by their EntityKey.\n\n## Date-range usage in GET Requests for Events\n\nWhen using the date range mode of operation, the \"beginDate\", \"endDate\", \"page\", and \"pagesize\" query parameters must be provided.\n\n## Identity and Related Entity Fields\n[//]: # (GuidelineLinkType.Identity)\nEntityKeys and Identifiers are properties that uniquely identify entities in our system.\nWhile EntityKey is the only field that guarantees global uniqueness, the system will generally honor an Identifier in place of an EntityKey.  When creating/updating a new entity, references to related entity Identities can be provided with only the Identifier populated (if an EntityKey is provided it will always be favored). If that Identifier resolves to multiple entities, an error will be returned.\n\nWhen retrieving an entity, references to related entity Identities will only have the EntityKey populated. In some cases, an EXPAND field will be available to drill into the related entity in the same call.\n\n## Version Field\nThe Version number is an optional field and can be updated by system processes and/or other users. When provided it is compared with the current Version of the entity and leads to an error with code 13 if they do not match. To rectify this issue the entity that failed needs to be retrieved to get the latest Version number.\n\n## Coordinate Field\nLatitude and longitude are provided in decimals on a coordinate object. When it is calculate by the system capturing it, and is an invalid coordinate, the coordinate will be omitted from response body.\n\n## Administrative Hierarchy and Region Visibility\n[//]: # (GuidelineLinkType.RegionVisibility)\nData within the system is generally organized within Regions.\n\nMost administrative entities, such as Worker and Equipment, can be made visible across multiple regions.  The RegionVisibility element within the entity controls this behavior and can be set to AllRegions or a specific subset of regions.\n\nWhen changing the RegionVisibility to a specific region or regions, you must make sure that the PrimaryRegion is always included.\n\nIf the entities being created/updated in the same request will not be visible in all regions, these must have at least one common region among them. So, if you are sending different regions in visibility and visible in all regions as false it will throw you an exception.\n\nAs an example, we have the next json object below that will throw an exception because the entities do not have a common region among them.\n\n```\n{\n    \"items\": [\n        {\n            \"identity\": {\n                \"identifier\": \"EXAMPLE01\"\n            },\n            \"regionVisibility\": {\n                \"visibleInAllRegions\": false,\n                \"regionIdentities\": [\n                    {\n                        \"entityKey\": 205\n                    }\n                ]\n            },\n        },\n        {\n            \"identity\": {\n                \"identifier\": \"EXAMPLE02\"\n            },\n            \"regionVisibility\": {\n                \"visibleInAllRegions\": false,\n                \"regionIdentities\": [\n                    {\n                        \"entityKey\": 202\n                    }\n                ]\n            },\n        },\n        {\n            \"identity\": {\n                \"identifier\": \"EXAMPLE03\"\n            },\n            \"regionVisibility\": {\n                \"visibleInAllRegions\": false,\n                \"regionIdentities\": [\n                    {\n                        \"entityKey\": 304\n                    }\n                ]\n            },\n        }\n    ]\n}\n\n```\nNow if we send a json object where entities have a common region it will let us create/update them.\n\n```\n{\n    \"items\": [\n        {\n            \"identity\": {\n                \"identifier\": \"EXAMPLE01\"\n            },\n            \"regionVisibility\": {\n                \"visibleInAllRegions\": false,\n                \"regionIdentities\": [\n                    {\n                        \"entityKey\": 205\n                    }\n                ]\n            },\n        },\n        {\n            \"identity\": {\n                \"identifier\": \"EXAMPLE02\"\n            },\n            \"regionVisibility\": {\n                \"visibleInAllRegions\": false,\n                \"regionIdentities\": [\n                    {\n                        \"entityKey\": 205\n                    },\n                    {\n                        \"entityKey\": 202\n                    }\n                ]\n            },\n        },\n        {\n            \"identity\": {\n                \"identifier\": \"EXAMPLE03\"\n            },\n            \"regionVisibility\": {\n                \"visibleInAllRegions\": false,\n                \"regionIdentities\": [\n                    {\n                        \"entityKey\": 205\n                    },\n                    {\n                        \"entityKey\": 304\n                    }\n                ]\n            },\n        }\n    ]\n}\n\n```\n\nCertain objects, primarily related to route planning, are rooted in a Routing Session.  The session itself belongs to a Region.  These objects are:\n+ Route\n+ Order\n\n## Time Field Formats\n\n### Timestamp: `yyyy-mm-ddThh:mm:ss.fffffff` (for fractions of a second, anything up to 7 digits may be used) - *all timestamps are in UTC*\n### Date: `yyyy-mm-dd`\n### Time of day: `hh:mm:ss`\n### Duration: `number of seconds`\n\n## Compliance Guidelines\n\nCompliance enabled workers must provide a valid first and last name with every compliance enabled call. If the mobile login is provided, the username must be more than 3 characters with no whitespaces. A valid alphanumeric license ranging from 3-20 characters should be included with the correct state and country.\nIf the worker entity is Eld exempt a valid Eld explanation field must be included. Worker entities without organization settings enabled should provide valid HOS rules.\nCompliance equipment entities must have a valid alphanumeric license plate value.\n\n### Enabled Rules:\nWhen creating or editing a compliance enabled worker, the Enabled Rules for that worker should be filled in and match the example format provided. The service is tolerant and will attempt to format rules that have ommitted or misplaced fields. No more than one each of Federal, Federal Rest Break Exempt, Federal Construction, and Canadian HOS rule may be assigned. Only one State or State Construction HOS rule may be assigned.\n\n### Default Rules:\n\nThe numeric representation of a valid HOS rule should be sent in when creating or updating a compliance enabled worker. This number should correspond with a rule that matches an enabled ruled sent in through the same call.\n\n### Enabled Rules Format: `{Country ISO-2|3} {Day/Hour} {State ISO-2|3} {Title} {hrs.} ({Month Year}.)`  - *Some fields may be omitted.*\n\n### Example Enabled Rules:\n`\"US 7/70 CA Construction hrs.\"`\n`\"CAN SK Private hrs.\"`\n`\"MEX OIL 8/70 hrs. (Dec 2014)\"`\n\n## Events\nTo compliment the date-range mode of operation for Events, we provide a \"systemTimestamp\" field that can be used similarly as a bookmark in each subsequent call. Simply set the query parameter for \"timeSource\" to \"system\" and give the \"beginDate\" query parameter the value of the returned \"systemTimestamp\" and you will receive the next page of results.\nIn the event of an edge case were two similar events hit the database at the same time, we provide an \"eventHash\" field that uniquely identifies each event.\n\n## Special Handling of Child Collections\nFor ease of use, collections of child entities are handled differently than normal REST conventions.  In many cases, child collections can be modified as embedded arrays on the parent entity rather than through a separate web service call.\n\nAlthough PUT and PATCH are treated differently in general, when it comes to child collections they behave the same way.\n+ If the array itself is not supplied, then **no changes** are made to the collection.\n+ If the array is supplied, then **the entire array** is replaced.\n+ When child items have Identity properties, then the children are updated in place if the new Identity matches the existing Identity.  This behavior is especially important with Routes and Stops.\n\nAs a simple example, suppose you had a Location with a single OpenClose override in its OpenCloseOverrides collection...\n\n\n```\n\nORIGINAL Location\n{\n  identity: {\n    entityKey: 1,\n    identifier: \"LOCATION_1\"\n  },\n  description: \"example location\",\n  serviceLocationInfo: {\n    overrides: {\n      openCloseOverrides: [\n        {\n          daysOfWeek: [\n            Tuesday\n          ],\n          \"orderClassIdentity\": {\n            \"identifier\": \"OC1\"\n          },\n          \"startTimeOfDay\": \"14:00:00\",\n          \"endTimeOfDay\": \"16:00:00\"\n        }\n      ]\n    }\n  }\n}\n\n```\n\nIf you then called `PUT` or `PATCH` on that Location without specifying the OpenCloseOverrides collection. For instance...\n\n```\n\nPUT PATCH /admin/locations\n{\n  identity: {\n    entityKey: 1,\n    identifier: \"LOCATION_1\"\n  },\n  description: \"example location\",\n  serviceLocationInfo: {\n    overrides: {\n      ######## OpenCloseOverrides are untouched #############\n    }\n  }\n}\n\n```\n\nThe OpenCloseOverrides collection would remain unchanged, with its single override at 14:00:00.\n\n\nIf, however you had included the list in your `PUT` or `PATCH`, then the list would be replaced. For instance...\n\n```\n\nPUT or PATCH /admin/locations\n{\n  identity: {\n    entityKey: 1,\n    identifier: \"LOCATION_1\"\n  },\n  description: \"example location\",\n  serviceLocationInfo: {\n    overrides: {\n\n      ######## Old OpenCloseOverride is thrown out and new override is added #############\n      openCloseOverrides: [\n        {\n          daysOfWeek: [\n            Friday\n          ],\n          \"orderClassIdentity\": {\n            \"identifier\": \"OC_OTHER\"\n          },\n          \"startTimeOfDay\": \"08:01:00\",\n          \"endTimeOfDay\": \"10:00:00\"\n        }\n      ]\n\n    }\n  }\n}\n\n```\n\n**Sending in an empty list differs from sending in null**. Null indicates no changes while an empty list indicates to remove all items.    For instance...\n\n```\n\nPUT or PATCH /admin/locations\n{\n  identity: {\n    entityKey: 1,\n    identifier: \"LOCATION_1\"\n  },\n  description: \"example location\",\n  serviceLocationInfo: {\n    overrides: {\n      ######## All OpenCloseOverrides are removed #############\n      openCloseOverrides: []\n    }\n  }\n}\n\n```\n\n## PUT and POST Error Interpretation\nTypically, when making `POST` and `PUT` requests, the response needs to be inspected for potential errors.  When there are errors, the response code may actually be a 201 or 200, but the response payload may contain an \"error\" property. If this property exists in the response body, then one or more errors have occurred within the context of the request. If there is an \"error\" property there will also be an \"errorCode\" and a \"message\" child properties included that will contain addition details about the error that has occurred.\n\nAs a simple example, suppose you had the next payload for a `POST` method pointing to the Location endpoint:\n```\n{\n\"items\": [\n    {\n        \"identity\": {\n            \"identifier\": \"TestIdentifier\"\n        },\n        \"regionVisibility\": {\n            \"visibleInAllRegions\": false,\n            \"regionIdentities\": [\n                {\n                    \"identifier\": \"RMTEST\"\n                }\n            ]\n        },\n        \"locationType\": \"Service\"\n    }\n  ]\n}\n```\nThen the response will appear as follows:\n```\nStatus: 201 Created\n{\n\"results\": [\n    {\n        \"identity\": {\n            \"identifier\": \"TestIdentifier\",\n            \"entityKey\": 0\n        },\n        \"error\": {\n            \"message\": \"Type: Identifier, Property: Identifier\",\n            \"errorCode\": 11\n        }\n    }\n  ]\n}\n```\n\n\n\n***\n\n# Common Use Cases\n\n## Typical Routing-Only Workflow\n1. `POST /login` to get an authentication token\n2. `GET /admin/locations?identifiers={locationId}` for each new order to see if the location already exists or needs to be created.\n3. `POST /admin/locations?geocode=true` to create locations that don't yet exist.\n4. `POST /dailyplan/orders` to create orders.\n5. `GET /dailyplan/routes?region={regionId}&sessionDate={date}` to get all routes to send back to the host system.\n\n## Typical Routing Job Workflow\n1. `POST /login` to get an authentication token\n2. `GET /admin/locations?identifiers={locationId}` for each new order to see if the location already exists or needs to be created.\n3. `POST /admin/locations?geocode=true` to create locations that don't yet exist.\n4. `POST /dailyplan/orders` to create orders.\n5. `POST /dailyplan/routingjob` to start the Routing Job for the given Region, Session and Pass(es).  The Region, Session and Pass(es) must currently exist in the database.\n6. `GET /dailyplan/routingjob/status?jobKey={jobKey}` to query the status of the Routing Job.  Once the status returns \"Completed\", the Routing Job results will be included.\n"
+  version: 1.42.0
+  x-logo:
+    url: omni_RoadnetTechBanner_large.svg
+  x-source-url: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/swagger.yaml
+  x-documentation-url: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  x-last-validated: '2026-08-10'
+  x-provenance: first-party — retrieved from the provider's own documentation host
+security:
+- tokenAuth: []
+tags:
+- name: Routing Job
+  description: Routing Job will create Routes for the given Region, Session and Pass(es). All unassigned orders for the given Session will be included in the Routing Job, unless a list of orders to route is specified in Order Identifiers.
+paths:
+  /dailyplan/routingjob:
+    post:
+      tags:
+      - Routing Job
+      summary: Routing Job
+      description: Post a Routing Job for the entered Region and Session.
+      operationId: postRoutingJob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                description: A Routing Job will create Routes for the selected Region and Session.
+                required:
+                - regionIdentity
+                - sessionIdentity
+                - passIdentities
+                properties:
+                  regionIdentity:
+                    type: object
+                    properties:
+                      entityKey:
+                        type: integer
+                        description: Represents the entitiy's unique identifier that is assigned by the system.
+                        example: 101
+                      identifier:
+                        type: string
+                        description: Represents a value that the entity can be used for identification and labeling purposes.
+                        example: TESTIDENTIFIER
+                    x-omni-valid:
+                      CalculatedReadonly:
+                      - description
+                  sessionIdentity:
+                    type: object
+                    description: The session must already exist in the database.
+                    properties:
+                      entityKey:
+                        type: integer
+                        description: The routing session's EntityKey. The field is DEPRECATED for PlanningSession requests.
+                        example: 101
+                      date:
+                        type: string
+                        description: The date for the routing session must be provided when the EntityKey is omitted. The field is REQUIRED for PlanningSession requests.
+                        format: date
+                      description:
+                        type: string
+                        description: The description for the routing session must be provided with the date.
+                        example: Daily
+                    x-omni-valid:
+                      SessionIdentity:
+                      - date
+                      - description
+                      - entityKey
+                  passIdentities:
+                    type: array
+                    description: The pass(es) to use in the Routing Job - these must already exist in the database.
+                    items:
+                      type: object
+                      required:
+                      - identifier
+                      properties:
+                        identifier:
+                          type: string
+                          example: TESTIDENTIFIER
+                      x-omni-valid:
+                        AlwaysRequired:
+                        - identifier
+                  orderIdentities:
+                    type: array
+                    description: The orders to include in the Routing Job.  All orders must already exist in the specified session and be unassigned.  If no orders are included, all unassigned orders in the session will be included in the Routing Job.
+                    items:
+                      type: object
+                      required:
+                      - identifier
+                      properties:
+                        identifier:
+                          type: string
+                          example: TESTIDENTIFIER
+                      x-omni-valid:
+                        AlwaysRequired:
+                        - identifier
+                  passProcessingMode:
+                    type: string
+                    example: UseAll
+                    enum:
+                    - CompareAndUseBest
+                    - UseAll
+                  unassignUnlockedStops:
+                    type: boolean
+                    description: This value is ignored if orderIdentities are specified.
+                    example: true
+                  considerOnlyMyOrders:
+                    type: boolean
+                    description: This value is ignored if orderIdentities are specified.
+                    example: true
+                  ignoreFlags:
+                    type: array
+                    uniqueItems: true
+                    items:
+                      type: string
+                      example: RequiredOrigin
+                      enum:
+                      - RequiredOrigin
+                      - LocationEquipmentTypeRestrictions
+                      - PreferredRouteId
+                      - Priority
+                      - AllowedDeliveryDays
+                      - OrderBeginDate
+                      - OrderEndDate
+                      - LocationWorkerRestrictions
+                      - OrderUrgency
+                      - OrderRestrictiveness
+                  fixOrderToDate:
+                    type: boolean
+                    description: If true, the Routing Job will change the begin and end dates of the order to match the routing session date. Used for rolling sessions.
+                    default: false
+                    example: false
+                x-omni-valid:
+                  PostRequired:
+                  - regionIdentity
+                  - sessionIdentity
+                  - passIdentities
+                  PostOptional:
+                  - orderIdentities
+                  - passProcessingMode
+                  - unassignUnlockedStops
+                  - considerOnlyMyOrders
+                  - ignoreFlags
+                  - fixOrderToDate
+            examples:
+              Generated Minimal:
+                externalValue: ../v1/examples/minimal/RoutingJob
+              Generated Maximal:
+                externalValue: ../v1/examples/maximal/RoutingJob
+              Minimal:
+                summary: Minimal
+                value:
+                  regionIdentity:
+                    identifier: NORTH_REGION
+                  sessionIdentity:
+                    date: 2019-01-29
+                    description: SESSION47575
+                  passIdentities:
+                  - identifier: PASSID
+              Maximal:
+                summary: Full
+                value:
+                  regionIdentity:
+                    identifier: NORTH_REGION
+                  sessionIdentity:
+                    date: 2019-01-29
+                    description: SESSION47575
+                  passIdentities:
+                  - identifier: PASSID
+                  orderIdentities:
+                  - identifier: ORDERID
+                  passProcessingMode: UseAll
+                  unassignUnlockedStops: false
+                  considerOnlyMyOrders: false
+                  ignoreFlags:
+                  - AllowedDeliveryDays
+                  - OrderBeginDate
+      responses:
+        202:
+          $ref: '#/components/responses/RoutingJobResponse'
+          description: ''
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+          description: ''
+  /dailyplan/routingjob/jobstatus/{jobKey}:
+    get:
+      tags:
+      - Routing Job
+      summary: Routing Job Status
+      description: Monitors the status and returns results for long-running Routing jobs.
+      operationId: getRoutingJobStatus
+      parameters:
+      - name: jobKey
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Identifier of the Event Subscriber for which to get Events. Must be provided for all requests.
+      responses:
+        200:
+          $ref: '#/components/responses/RoutingJobResponse'
+          description: ''
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+          description: ''
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Resource was not found
+    RoutingJobResult:
+      type: object
+      properties:
+        routesCreated:
+          type: integer
+          example: 20
+        ordersRouted:
+          type: integer
+          example: 22
+        ordersNotRouted:
+          type: integer
+          example: 3
+      x-omni-valid:
+        CalculatedReadonly:
+        - routesCreated
+        - ordersRouted
+        - ordersNotRouted
+    RoutingJobResponse:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/RoutingJobResult'
+        notRoutedOrderResults:
+          type: array
+          description: Details about the orders that were not able to be routed in a particular routing job.
+          items:
+            $ref: '#/components/schemas/NotRoutedOrderResults'
+        error:
+          $ref: '#/components/schemas/ErrorContainer'
+        jobStatus:
+          $ref: '#/components/schemas/JobStatus'
+      x-omni-valid:
+        CalculatedReadonly:
+        - result
+        - notRoutedOrderResults
+        - error
+        - jobStatus
+    JobStatus:
+      type: object
+      description: Indicates the status of the job that performed the save/update operation on the data. This property is only present when the operation was triggered by a job.
+      properties:
+        jobKey:
+          type: integer
+        statusMessage:
+          type: string
+          example: InProgress
+          enum:
+          - InProgress
+          - Completed
+    Result:
+      type: object
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
+        error:
+          $ref: '#/components/schemas/Error'
+    NotRoutedOrderReasons:
+      type: string
+      example: MaxTime
+      enum:
+      - CouldNotBeDetermined
+      - MaxTime
+      - StartTime
+      - RouteMinimums
+      - MaxQuantity
+      - Template
+      - ReloadAsLastStop
+      - MaxStops
+      - MaxReloads
+      - RequiredOrigin
+      - LocationEquipmentTypeRestrictions
+      - CellBoundaries
+      - PreferredRouteId
+      - CellEquipmentTypeRestrictions
+      - TripMaxTime
+      - TripMinimums
+      - RunningCap
+      - MustMakeTimeWindow
+      - Priority
+      - PickupsAtEnd
+      - ReloadCapThreshold
+      - AllowedDeliveryDays
+      - Filter
+      - TimeOfDay
+      - VehicleRestriction
+      - OrderBeginEndDate
+      - NoRoutes
+      - NoRemainingEquipment
+      - TemplateResources
+      - OnlyTemplateRouting
+      - OnlyCellRouting
+      - CellRouteLimit
+      - NoValidResourceAssignment
+      - RouteTemplateDeliveryDays
+      - TargetRouteIsBuilt
+      - LocationNotGeocoded
+      - LocationDeleted
+      - MaxTravelTime
+      - CompartmentCapacity
+      - NoMatchingCompartment
+      - LocationWorkerRestriction
+      - ReloadDepotSkuRestrictions
+      - DepotSkuMinimums
+    ErrorContainer:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Result'
+        errorCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Resource was not found
+    Identity:
+      type: object
+      properties:
+        entityKey:
+          type: integer
+          description: Represents the entitiy's unique identifier that is assigned by the system.
+          example: 101
+        identifier:
+          type: string
+          description: Represents a value that the entity can be used for identification and labeling purposes.
+          example: TESTIDENTIFIER
+        description:
+          type: string
+          description: 'Text that provides a description of a given entity (NOTE: not all entity types will have a description and therefore, it is considered a best practice to test if the property actually exists before attempting to access it).
+
+            '
+          example: Test Description
+      x-omni-valid:
+        CalculatedReadonly:
+        - description
+    NotRoutedOrderResults:
+      type: object
+      description: Details about the orders that were not able to be routed in a particular routing job.
+      properties:
+        orderIdentity:
+          description: Identity of the unrouted order
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+        locationIdentity:
+          description: Identity of the Location assigned to the unrouted order
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+        orderClassIdentity:
+          description: Identity of the Order Class assigned to the unrouted order
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+        targetRouteIdentity:
+          description: Identity of the route that the order would have been placed on had it not already been built
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+        reasonNotOnNearbyRoute:
+          description: Explanation of why the order was not placed on a nearby route
+          allOf:
+          - $ref: '#/components/schemas/NotRoutedOrderReasons'
+        reasonNotOnNewRoute:
+          description: Explanation of why the order was not placed on a new route
+          allOf:
+          - $ref: '#/components/schemas/NotRoutedOrderReasons'
+        orderType:
+          type: string
+          description: Type of the unrouted order
+          example: Delivery
+          enum:
+          - None
+          - Delivery
+          - Pickup
+          - DeliveryAndPickup
+          - Transfer
+      x-omni-valid:
+        CalculatedReadonly:
+        - orderIdentity
+        - locationIdentity
+        - orderClassIdentity
+        - targetRouteIdentity
+        - reasonNotOnNearbyRoute
+        - reasonNotOnNewRoute
+        - orderType
+  responses:
+    RoutingJobResponse:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RoutingJobResponse'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/RoutingJobResponse'
+    ErrorResponse:
+      description: 'Unexpected ERROR.  Common errors are:
+
+        + 400 - Bad request.  See response body for more detail.
+
+        + 401 - Authentication failed or was not provided
+
+        + 404 - Resource was not found
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorContainer'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/ErrorContainer'
+  securitySchemes:
+    tokenAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Login
+  tags:
+  - Login Overview
+  - Login
+- name: Admin
+  tags:
+  - Admin Overview
+  - Accounts
+  - Active Alert Recipient
+  - Cell Set
+  - Device
+  - Equipment
+  - Equipment Type
+  - Location
+  - Order Class
+  - Package Type
+  - Product Type
+  - Region
+  - Service Pattern
+  - Service Pattern Set
+  - Service Time Type
+  - SKU
+  - Time Window Type
+  - Workers
+  - Worker Type
+- name: Daily Plan
+  tags:
+  - Daily Plan Overview
+  - Orders
+  - Route Plan
+  - Route Template Set
+  - Route Template
+  - Routing Job
+  - Daily Pass
+  - Daily Sessions
+- name: Rolling Plan
+  tags:
+  - Rolling Plan Overview
+  - Rolling Sessions
+  - Cascade Schedule Job
+  - Roll Forward Job
+- name: Strategic Plan
+  tags:
+  - Strategic Plan Overview
+  - Planning Sessions
+  - Recurring Orders
+  - Strategic Routes
+  - Territories
+- name: Events
+  tags:
+  - Events Overview
+  - Events
+- name: Reports
+  tags:
+  - Reports Overview
+  - Equipment Positions
+  - Equipment Status
+  - Form Responses
+  - Route Actuals
+  - Worker

@@ -60,12 +60,11 @@ apis:
     type: APIReference
   - url: https://www.omnitracs.com/omnitracs-roadnet-platform
     type: Documentation
-  description: Integration web services for the Omnitracs Roadnet routing and
-    dispatch platform (route planning and optimization, orders/stops, and
-    schedules). A live Swagger UI is published at the integration host, but the
-    underlying operations require a provisioned integration account; the surface
-    is not openly self-service. Endpoints are modeled, not mirrored from an open
-    reference.
+  description: >-
+    Integration web services for the Omnitracs Roadnet routing and dispatch platform (route planning and
+    optimization, orders/stops, and schedules). A live Swagger UI is published at the integration host,
+    but the underlying operations require a provisioned integration account; the surface is not openly
+    self-service. Endpoints are modeled, not mirrored from an open reference.
 - aid: omnitracs:omnitracs-entity-management-api
   name: Omnitracs Entity Management Web Services
   tags:
@@ -77,16 +76,17 @@ apis:
   humanURL: https://services.omnitracs.com/portalWeb/
   endpointsModeled: true
   properties:
-  - url: https://www.cnrportal.com/help/otsWeb/help/en_US/documents/doc_cust_integrate-with-sp_d.pdf
+  - url: >-
+      https://www.cnrportal.com/help/otsWeb/help/en_US/documents/doc_cust_integrate-with-sp_d.pdf
     type: Documentation
   - url: https://services.omnitracs.com/portalWeb/
     type: SignupURL
-  description: Services Portal entity-management web services for maintaining
-    fleet master data - vehicle maintenance (add/edit), driver maintenance
-    (add/edit), and trailer management, with HOS Group membership and a bulk
-    importer. Also exposed as Entity Management Web Service Extensions for the
-    Omnitracs One platform. Partner/customer gated; a username/password with API
-    access is required. Endpoints are modeled from public integration notes.
+  description: >-
+    Services Portal entity-management web services for maintaining fleet master data - vehicle maintenance
+    (add/edit), driver maintenance (add/edit), and trailer management, with HOS Group membership and a
+    bulk importer. Also exposed as Entity Management Web Service Extensions for the Omnitracs One platform.
+    Partner/customer gated; a username/password with API access is required. Endpoints are modeled from
+    public integration notes.
 - aid: omnitracs:omnitracs-event-subscription-api
   name: Omnitracs Event Subscription Service (ESS)
   tags:
@@ -99,17 +99,560 @@ apis:
   humanURL: https://services.omnitracs.com/portalWeb/
   endpointsModeled: true
   properties:
-  - url: https://www.cnrportal.com/help/otsWeb/help/en_US/documents/doc_cust_integrate-with-sp_d.pdf
+  - url: >-
+      https://www.cnrportal.com/help/otsWeb/help/en_US/documents/doc_cust_integrate-with-sp_d.pdf
     type: Documentation
-  description: A publish-subscribe integration service in which Omnitracs
-    applications continually publish transactions (vehicle positions/GPS, driver
-    messages, Hours-of-Service logs, and critical-event / driver-coaching
-    notifications) to the Integration Web Server, and back-office applications
-    subscribe to and periodically request the transaction types they want. The
-    Event Subscription Service delivers each transaction as a SOAP/XML package
-    and expects a SOAP/XML acknowledgement. Transport is request/response
-    polling over HTTPS, not a WebSocket. Partner/customer gated; endpoints are
-    modeled.
+  description: >-
+    A publish-subscribe integration service in which Omnitracs applications continually publish transactions
+    (vehicle positions/GPS, driver messages, Hours-of-Service logs, and critical-event / driver-coaching
+    notifications) to the Integration Web Server, and back-office applications subscribe to and periodically
+    request the transaction types they want. The Event Subscription Service delivers each transaction
+    as a SOAP/XML package and expects a SOAP/XML acknowledgement. Transport is request/response polling
+    over HTTPS, not a WebSocket. Partner/customer gated; endpoints are modeled.
+- aid: omnitracs:omnitracs-accounts-api
+  name: Omnitracs Accounts API
+  description: >-
+    Accounts are an optional way of grouping locations together that are for the same client, buyer, or
+    purchaser.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-accounts-api-openapi.yml
+- aid: omnitracs:omnitracs-active-alert-recipient-api
+  name: Omnitracs Active Alert Recipient API
+  description: >-
+    Contact information for individuals who will receive service alerts from Omnitracs Active Alert. You
+    can assign Active Alert Recipients to multiple Service Location Subscriptions.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Active Alert Recipient
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-active-alert-recipient-api-openapi.yml
+- aid: omnitracs:omnitracs-cascade-schedule-job-api
+  name: Omnitracs Cascade Schedule Job API
+  description: >-
+    A Cascade Schedule Job will copy and/or update daily orders from a source Strategic Planning Session
+    to a destination Rolling Session for the selected region, according to the specified options
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Cascade Schedule Job
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-cascade-schedule-job-api-openapi.yml
+- aid: omnitracs:omnitracs-cell-set-api
+  name: Omnitracs Cell Set API
+  description: >-
+    A Cell Set is a collection of geographic Cells used to group Service Locations for optimized route
+    planning. Each Cell represents a defined area where deliveries or services are organized to improve
+    efficiency by balancing aspects of template routing and dynamic routing. Within a Cell Set, multiple
+    Cells can be drawn or added, and routing rules can be configured to either restrict or allow routes
+    to cross Cell boundaries.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Cell Set
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-cell-set-api-openapi.yml
+- aid: omnitracs:omnitracs-daily-pass-api
+  name: Omnitracs Daily Pass API
+  description: A Daily Pass contains all of the rules for routing a defined set of orders.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Daily Pass
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-daily-pass-api-openapi.yml
+- aid: omnitracs:omnitracs-daily-sessions-api
+  name: Omnitracs Daily Sessions API
+  description: Daily Sessions
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Daily Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-daily-sessions-api-openapi.yml
+- aid: omnitracs:omnitracs-device-api
+  name: Omnitracs Device API
+  description: >-
+    Devices are a piece of portable electronic equipment that can connect to the internet, especially
+    a smartphone or tablet computer, you can associate a device with existing equipment. An electronic
+    device can be a telematic device or mobile device.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Device
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-device-api-openapi.yml
+- aid: omnitracs:omnitracs-equipment-api
+  name: Omnitracs Equipment API
+  description: >-
+    Equipment are the individual pieces of equipment each worker uses every day. You can associate another
+    piece of equipment with the existing equipment, such as associating a tractor and trailer, and then
+    have both pieces automatically assigned to a route together. You can also associate a worker with
+    a piece of equipment, and have that worker automatically assigned to the route with the equipment,
+    as well as set compliance settings, and region sharing settings. If you use Telematics devices with
+    Omnitracs One, you should appropriately assign each Telematics device to the piece of equipment it
+    is installed in. Before creating equipment, you must have created the equipment types.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Equipment
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-equipment-api-openapi.yml
+- aid: omnitracs:omnitracs-equipment-positions-api
+  name: Omnitracs Equipment Positions API
+  description: >-
+    The Equipment Position Api shows the travel history for each piece of equipment that uses a Telematics
+    device, providing a record of when and where your equipment traveled. The service lists GPS pings
+    over a specified date-range, for each ping, the service shows the piece of equipment's ID , the date
+    and time the ping occurred, the location where the ping occurred, the latitude and longitude where
+    the ping occurred and the equipment's odometer reading at the time the ping occurred.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Equipment Positions
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-equipment-positions-api-openapi.yml
+- aid: omnitracs:omnitracs-equipment-status-api
+  name: Omnitracs Equipment Status API
+  description: >-
+    The Equipment Status Api shows current equipment information including route, device, and location
+    as well as telemetry information that is provided by the associated device
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Equipment Status
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-equipment-status-api-openapi.yml
+- aid: omnitracs:omnitracs-equipment-type-api
+  name: Omnitracs Equipment Type API
+  description: >-
+    Equipment types are the different types of equipment used on your routes - the tractors, trailers,
+    bay trucks, hand trucks, etc. When creating routes you can choose whether to have an equipment type,
+    or an individual piece of equipment assigned to the route. Equipment types have capacity and costs
+    associated with them. Once the equipment types have been added, you can add the individual pieces
+    of equipment.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Equipment Type
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-equipment-type-api-openapi.yml
+- aid: omnitracs:omnitracs-events-api
+  name: Omnitracs Events API
+  description: "Events are a way for subscribers to be notified about certain route, stop, worker and\
+    \ equipment events. For instance, one subscriber could receive events when a driver arrives or departs\
+    \ a stop, while another subscriber could receive events when a driver logs into a mobile device. \n\
+    An event subscriber must be configured through the client before any events can be retrieved.\n\n\
+    **Best Practices:** Events can occur very frequently, best practice would be calling this endopoint\
+    \ regularly with the **beginDate** and **endDate** parameters defined. It is also recommended to include\
+    \ both the **pageIndex** and **pageSize** parameters for paging.\n\n**Region filtering:** Region filtering\
+    \ is based on the event type and the **main entity** associated with each type. Only events whose\
+    \ main entity is assigned or shared to the region specified will be returned.\n\nEntity-to-region\
+    \ filtering mapping:\n- Events of type: `Route`, `Stop`, `DriverTask`, `SendOrders` are filtered by\
+    \ the **Route's region**\n- Events of type: `IgnitionStatusChanged` are filtered by the **TelematicDevice's\
+    \ region**\n- Events of type: `WorkerStatusChanged` are filtered by the **Worker's region**\n- Events\
+    \ of type: `CriticalEvent` are filtered by the **Equipment's region**\n- Events of type: `FaultCode`,\
+    \ available to **all regions**\n\nNote: If an event's main entity is not assigned or shared to a region,\
+    \ it will be excluded from region-filtered responses."
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-events-api-openapi.yml
+- aid: omnitracs:omnitracs-examples-api
+  name: Omnitracs Examples API
+  description: The Examples API from Omnitracs — 1 operation(s) for examples.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Examples
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-examples-api-openapi.yml
+- aid: omnitracs:omnitracs-form-responses-api
+  name: Omnitracs Form Responses API
+  description: >-
+    The Form Responses Api returns Form responses from Roadnet Mobile custom forms that drivers fill out
+    during their work day.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Form Responses
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-form-responses-api-openapi.yml
+- aid: omnitracs:omnitracs-location-api
+  name: Omnitracs Location API
+  description: >-
+    Locations are generally the customers you deliver to, although they could also be the vendors from
+    whom you have purchased products or other places you may send a piece of equipment. When you add service
+    locations, you need to provide some basic information such as an address and service information.
+    The address is used to determine where the service location is located; this is called its geocode.
+    The service information is used to determine when you should service the location, as well as how
+    long it should take to service the location. The Service Locations - Service Window Overrides allows
+    you to enter service window for specific days. Any service window entered here will override the service
+    window for the service location's selected type.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Location
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-location-api-openapi.yml
+- aid: omnitracs:omnitracs-login-api
+  name: Omnitracs Login API
+  description: Login
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Login
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-login-api-openapi.yml
+- aid: omnitracs:omnitracs-order-class-api
+  name: Omnitracs Order Class API
+  description: >-
+    Order classes let you group several factors that affect an order's delivery, such as the service times
+    and service windows, as well as the type of equipment that can be used. You can create different order
+    classes for different types of tasks to be completed like delivery, merchandiser, service, etc. For
+    instance, you could have an order class called DEL for delivery, which would have one set of service
+    times and service windows, and another called MER for merchandisers, which would have a separate set
+    of service times and service windows. Then, when you add the orders you simply specify the proper
+    order class and the appropriate service times and service windows will be used.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Order Class
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-order-class-api-openapi.yml
+- aid: omnitracs:omnitracs-orders-api
+  name: Omnitracs Orders API
+  description: "When saving an Order, it is crucial to specify the Order Class. The Order Class determines\
+    \ the Service Times and service Windows for that Order, unless there are overrides at the Service\
+    \ Location or directly on the Order itself.  \n\nAt a minimum, you must define one Order Class. However,\
+    \ to facilitate adjustments in Service Times, Service Windows, and Equipment Types for different types\
+    \ of Orders during routing, it is advisable to create multiple Order Classes. These classes enable\
+    \ you to categorize several aspects that influence an Order's delivery, such as the Service Time,\
+    \ Service Window or Equipment Type.\n\nFor example, you can create distinct Order Classes for various\
+    \ tasks:\n\n- **Delivery (DEL)**: An Order Class for delivery with a specific set of service times\
+    \ and windows. \n\n- **Merchandising (MER)**: A separate order class for merchandisers, featuring\
+    \ different service times and windows.\n\nBy assigning the appropriate order class when adding orders,\
+    \ the corresponding service times and windows are automatically applied, ensuring that each order\
+    \ is handled correctly.\n\n**NOTE:** If the request to save Orders contains at least 5 items, then\
+    \ the Orders will be processed by a job. If the job completes within 30 seconds, the response will\
+    \ include the results, detailing the Orders that were successfully saved and any errors occurred.\
+    \ If the job does not finish within 30 seconds, the response will instead provide a job key.\n\nThe\
+    \ user is then required to query the API at `dailyplan/orders/jobstatus` with the job key and continue\
+    \ querying until a successful status and the results are returned.\n\n**NOTE:** Concurrent requests\
+    \ are allowed, but issues can arise if the requests contain Orders that access the same object such\
+    \ as Routes or Unassigned Order Groups. In this case, it is recommended to place multiple Orders into\
+    \ a single request to avoid these issues."
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-orders-api-openapi.yml
+- aid: omnitracs:omnitracs-package-type-api
+  name: Omnitracs Package Type API
+  description: Defines the package type of a SKU
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Package Type
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-package-type-api-openapi.yml
+- aid: omnitracs:omnitracs-planning-sessions-api
+  name: Omnitracs Planning Sessions API
+  description: Planning Sessions
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Planning Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-planning-sessions-api-openapi.yml
+- aid: omnitracs:omnitracs-product-type-api
+  name: Omnitracs Product Type API
+  description: >-
+    Product Type are entities used to describe the product when registering an SKU, for example, it can
+    be a wine or snacks.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Product Type
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-product-type-api-openapi.yml
+- aid: omnitracs:omnitracs-recurring-orders-api
+  name: Omnitracs Recurring Orders API
+  description: >-
+    When saving a recurring order, the specify the order class to determine the service times and/or service
+    windows for the recurring order; otherwise, the default order class is saved with the recurring order.
+    Even if the customer has location service time override or location service window override, the overrides
+    are still linked to an order class.  The only exception is at the recurring order level.  An individual
+    recurring order can have service time overrides and/or service window overrides. When saving a recurring
+    order, a unique order number is required. You can use the service location ID as the order number.  A
+    unique order number allows easy updating of cycle quantities, frequency (service pattern sets), and
+    other data.  The unique order number also allows multiple recurring orders for the same service location
+    in the same planning session.  For instance, service location A can have two tasks, delivery and merchandising.  You
+    can add recurring order A1 for the delivery territory and add recurring order A2 for the merchandising
+    territory.  Each recurring order has its own order class and frequency.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Recurring Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-recurring-orders-api-openapi.yml
+- aid: omnitracs:omnitracs-region-api
+  name: Omnitracs Region API
+  description: >-
+    Each organization or area for which you create routes is referred to as a region; you set up separate
+    regions for each depot. It is your responsibility to designate a region for each order. Furthermore,
+    there can be one or more unique regions designated to an order. For instance, you could set one region
+    as Baltimore and another region as Washington, D.C. Each region can have its own default settings,
+    such as an equipment type preset, that will be used throughout the region. Regions have resources
+    available to them, such as drivers and equipment.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Region
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-region-api-openapi.yml
+- aid: omnitracs:omnitracs-roll-forward-job-api
+  name: Omnitracs Roll Forward Job API
+  description: >-
+    A Roll Forward Job will roll the start date of a specified Rolling Session forward by one day and
+    cascade any planned orders from the new start date to the new Daily Session
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Roll Forward Job
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-roll-forward-job-api-openapi.yml
+- aid: omnitracs:omnitracs-rolling-sessions-api
+  name: Omnitracs Rolling Sessions API
+  description: Rolling Sessions
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Rolling Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-rolling-sessions-api-openapi.yml
+- aid: omnitracs:omnitracs-route-actuals-api
+  name: Omnitracs Route Actuals API
+  description: >-
+    Route Actuals lists the routes and the drivers for a day. For each route, the payload includes planned/actual
+    data for the number of stops, service time, travel time, non-service time (such as breaks and waits),
+    distance traveled, mid-route depots, total route cost, and the quantities of units delivered and picked
+    up.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Route Actuals
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-route-actuals-api-openapi.yml
+- aid: omnitracs:omnitracs-route-plan-api
+  name: Omnitracs Route Plan API
+  description: >-
+    Route Plan has information for the stops, equipment assigned, workers, orders and its region. Information
+    pertaining to route times and order quantities can be set and retrieved as well.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Route Plan
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-route-plan-api-openapi.yml
+- aid: omnitracs:omnitracs-route-template-api
+  name: Omnitracs Route Template API
+  description: >-
+    Route Template has information for the stops, equipment assigned, workers and its region. Information
+    pertaining to route times can be set and retrieved as well.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Route Template
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-route-template-api-openapi.yml
+- aid: omnitracs:omnitracs-route-template-set-api
+  name: Omnitracs Route Template Set API
+  description: Route Template Set contains informaion about Route Templates.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Route Template Set
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-route-template-set-api-openapi.yml
+- aid: omnitracs:omnitracs-routing-job-api
+  name: Omnitracs Routing Job API
+  description: >-
+    Routing Job will create Routes for the given Region, Session and Pass(es). All unassigned orders for
+    the given Session will be included in the Routing Job, unless a list of orders to route is specified
+    in Order Identifiers.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Routing Job
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-routing-job-api-openapi.yml
+- aid: omnitracs:omnitracs-service-pattern-api
+  name: Omnitracs Service Pattern API
+  description: A pattern of service defined by time intervals
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Service Pattern
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-service-pattern-api-openapi.yml
+- aid: omnitracs:omnitracs-service-pattern-set-api
+  name: Omnitracs Service Pattern Set API
+  description: Service Pattern Set
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Service Pattern Set
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-service-pattern-set-api-openapi.yml
+- aid: omnitracs:omnitracs-service-time-type-api
+  name: Omnitracs Service Time Type API
+  description: >-
+    Service time types are a set of rules that define how service times should be calculated. Service
+    time types help you group your service locations by a common trait, which is strictly service time.
+    Service time types allow you to specify that a group of service locations have the same fixed and
+    variable service times because the delivery environment is the same, such as a chain of fast-food
+    restaurants or a group of grocery stores that allows a pallet drop at a loading dock. Service time
+    types may be, but don't have to be, correlated directly with service location categories
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Service Time Type
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-service-time-type-api-openapi.yml
+- aid: omnitracs:omnitracs-sku-api
+  name: Omnitracs SKU API
+  description: >-
+    SKUs are the most specific way to define individual products. You will need to use SKUs if you are
+    using line items on your orders; each line item on the order must refer to a SKU. If your orders contain
+    line items, you can establish service time details for each SKU, giving you more accurate service
+    times when routing. For instance, you can specify that it takes longer to deliver a keg than a case
+    of 12-ounce cans, and the service time calculated for the order will reflect this difference, instead
+    of basing all of the variable service time on one size.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - SKU
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-sku-api-openapi.yml
+- aid: omnitracs:omnitracs-strategic-routes-api
+  name: Omnitracs Strategic Routes API
+  description: Strategic Routes have information for individual routes within a Territory.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Strategic Routes
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-strategic-routes-api-openapi.yml
+- aid: omnitracs:omnitracs-territories-api
+  name: Omnitracs Territories API
+  description: Territories
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Territories
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-territories-api-openapi.yml
+- aid: omnitracs:omnitracs-time-window-type-api
+  name: Omnitracs Time Window Type API
+  description: >-
+    Time window types are a set of rules that define when a location is open, when it closes, as well
+    as what times are most convenient for service. Time window types help you to assign these common traits
+    to groups of locations instead of having to define them for each one. They are also based on Order
+    Class so that some types of orders may be delivered at different times than others.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Time Window Type
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-time-window-type-api-openapi.yml
+- aid: omnitracs:omnitracs-worker-api
+  name: Omnitracs Worker API
+  description: >-
+    To help your organization maintain HOS compliance, we provide a Worker Compliance/Performance/Log
+    service that tracks the HOS status and efficiency of your workers, while allowing you to proactively
+    monitor your routes for any HOS issues. By having better awareness of your workers' HOS statuses through
+    you can ensure that your HOS records remain accurate and you will be better positioned to intervene
+    before violations occur.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Worker
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-worker-api-openapi.yml
+- aid: omnitracs:omnitracs-worker-type-api
+  name: Omnitracs Worker Type API
+  description: >-
+    Worker types are the different types of worker used on your routes, customer has drivers and helpers
+    on routes
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Worker Type
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-worker-type-api-openapi.yml
+- aid: omnitracs:omnitracs-workers-api
+  name: Omnitracs Workers API
+  description: >-
+    Workers are employees who are tracked through Omnitracs One, such as drivers, technicians, dispatchers,
+    salespeople, and helpers. Valid Omnitracs One worker entities have records stored such as the name,
+    phone numbers, a login for the mobile application, and pay information by accessing the system through
+    the mobile UI, host website or any number of API's. This pay information is used to help determine
+    the cost of a route. When adding a worker, you can assign the equipment that the worker normally uses,
+    or the depot they usually work out of. Before workers are added, the worker type must be added.
+  humanURL: https://apex-prod-integration.aws.roadnet.com/integration/api-docs/index.html
+  baseURL: https://apex-prod-integration.aws.roadnet.com/integration
+  tags:
+  - Workers
+  properties:
+  - type: OpenAPI
+    url: openapi/omnitracs-workers-api-openapi.yml
 common:
 - type: DomainSecurity
   url: security/omnitracs-domain-security.yml
