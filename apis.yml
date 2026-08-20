@@ -91,6 +91,12 @@ apis:
   name: Omnitracs Event Subscription Service (ESS)
   tags:
   - Positions
+  - Message
+  - HOS
+  - Critical Events
+  - Publish Subscribe
+  tags_raw:
+  - Positions
   - Messages
   - HOS
   - Critical Events
