@@ -17,6 +17,17 @@ description: Omnitracs is a commercial fleet management, telematics, and
   contracted customers and integration partners. Endpoints documented here for
   gated surfaces are honestly modeled from public integration notes, not from an
   open reference.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: unknown
