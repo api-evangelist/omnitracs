@@ -1,0 +1,60 @@
+{
+  "provider": "omnitracs",
+  "sources": [
+    "omnitracs-openapi.yml"
+  ],
+  "outputs": [
+    "omnitracs-accounts-api-openapi.yml",
+    "omnitracs-active-alert-recipient-api-openapi.yml",
+    "omnitracs-cascade-schedule-job-api-openapi.yml",
+    "omnitracs-cell-set-api-openapi.yml",
+    "omnitracs-daily-pass-api-openapi.yml",
+    "omnitracs-daily-sessions-api-openapi.yml",
+    "omnitracs-device-api-openapi.yml",
+    "omnitracs-equipment-api-openapi.yml",
+    "omnitracs-equipment-positions-api-openapi.yml",
+    "omnitracs-equipment-status-api-openapi.yml",
+    "omnitracs-equipment-type-api-openapi.yml",
+    "omnitracs-events-api-openapi.yml",
+    "omnitracs-examples-api-openapi.yml",
+    "omnitracs-form-responses-api-openapi.yml",
+    "omnitracs-location-api-openapi.yml",
+    "omnitracs-login-api-openapi.yml",
+    "omnitracs-order-class-api-openapi.yml",
+    "omnitracs-orders-api-openapi.yml",
+    "omnitracs-package-type-api-openapi.yml",
+    "omnitracs-planning-sessions-api-openapi.yml",
+    "omnitracs-product-type-api-openapi.yml",
+    "omnitracs-recurring-orders-api-openapi.yml",
+    "omnitracs-region-api-openapi.yml",
+    "omnitracs-roll-forward-job-api-openapi.yml",
+    "omnitracs-rolling-sessions-api-openapi.yml",
+    "omnitracs-route-actuals-api-openapi.yml",
+    "omnitracs-route-plan-api-openapi.yml",
+    "omnitracs-route-template-api-openapi.yml",
+    "omnitracs-route-template-set-api-openapi.yml",
+    "omnitracs-routing-job-api-openapi.yml",
+    "omnitracs-sku-api-openapi.yml",
+    "omnitracs-service-pattern-api-openapi.yml",
+    "omnitracs-service-pattern-set-api-openapi.yml",
+    "omnitracs-service-time-type-api-openapi.yml",
+    "omnitracs-strategic-routes-api-openapi.yml",
+    "omnitracs-territories-api-openapi.yml",
+    "omnitracs-time-window-type-api-openapi.yml",
+    "omnitracs-worker-api-openapi.yml",
+    "omnitracs-worker-type-api-openapi.yml",
+    "omnitracs-workers-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/omnitracs-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "omnitracs-openapi.yml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "omnitracs-openapi.yml: tagged paths GET /examples/{type}/{entity}/{discriminator} -> Examples",
+    "omnitracs-openapi.yml: declared missing tag: Examples",
+    "apis.yml register: written (+40 apis, 43 total)"
+  ],
+  "skipped": []
+}
