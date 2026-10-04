@@ -145,3 +145,9 @@ common:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-status: acquired
+x-acquired-by: solera
+x-parent: solera
+x-acquired-date: '2021-06'
+x-status-source: "https://www.omnitracs.com/news/solera-completes-acquisitions-omnitracs-and-dealersocket"
+x-status-evidence: "Solera completed its acquisition of Omnitracs in June 2021; omnitracs.com is live and the product continues under Solera Fleet Solutions (roadmap#814)"
