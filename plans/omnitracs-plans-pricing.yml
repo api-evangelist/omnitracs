@@ -48,3 +48,32 @@ sources:
 - https://eldfocus.com/omnitracs/
 - https://fleetlogging.com/omnitracs/
 - https://tech.co/fleet-management/omnitracs-eld-compliant-fleet-management-review
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - subscription
+  units:
+  - negotiated
+  plans:
+  - name: BYOD ELD (Bring Your Own Device)
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Standard ELD / Fleet Management
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Enterprise / Omnitracs One
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - negotiated
+    periods: []
